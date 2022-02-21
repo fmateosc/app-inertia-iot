@@ -3,8 +3,10 @@ require('./bootstrap');
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+const appName = 'IOT-SPAIN';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
