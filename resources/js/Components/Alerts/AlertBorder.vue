@@ -1,7 +1,7 @@
 <template>
     <div
         class="border-l-4 p-4"
-        :class="alertColor"
+        :class="[alertColor]"
         role="alert"
     >
         <p class="font-bold" v-html="title"></p>

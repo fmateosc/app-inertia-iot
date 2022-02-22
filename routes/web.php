@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\BrokerController;
+use App\Http\Controllers\StationController;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,3 +35,8 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::middleware(['auth:sanctum', 'verified'])
     ->get('/dashboard/broker', [BrokerController::class, 'index'])
     ->name('broker.index');
+
+//RUTAS PARA LAS ESTACIONES
+Route::middleware(['auth:sanctum', 'verified'])
+    ->get('/dashboard/estaciones', [StationController::class, 'index'])
+    ->name('estaciones.index');
