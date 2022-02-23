@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BrokerController;
 use App\Http\Controllers\StationController;
+use App\Http\Controllers\DeviceController;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -40,3 +41,11 @@ Route::middleware(['auth:sanctum', 'verified'])
 Route::middleware(['auth:sanctum', 'verified'])
     ->get('/dashboard/estaciones', [StationController::class, 'index'])
     ->name('estaciones.index');
+
+//RUTAS PARA LOS DISPOSITIVOS
+Route::middleware(['auth:sanctum', 'verified'])
+    ->get('/dashboard/dispositivos', [DeviceController::class, 'index'])
+    ->name('dispositivos.index');
+Route::middleware(['auth:sanctum', 'verified'])
+    ->get('/dashboard/dispositivos/create', [DeviceController::class, 'create'])
+    ->name('dispositivos.create');     
