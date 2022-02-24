@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('device_id', 50)->unique();
             $table->string('name', 20);
-            $table->string('type', 300);
+            $table->string('type', 100);
             $table->string('password', 20)->nullable();
             $table->boolean('selected')->default(false);
             $table->timestamps();

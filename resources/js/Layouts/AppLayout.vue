@@ -37,7 +37,7 @@
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="route('dispositivos.index')" :active="route().current('device.index')">
+                                <jet-nav-link :href="route('dispositivos.index')" :active="route().current('dispositivos.*')">
                                     Dispositivos
                                 </jet-nav-link>
                             </div>

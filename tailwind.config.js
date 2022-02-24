@@ -19,4 +19,7 @@ module.exports = {
 
     plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
     //plugins: [require("daisyui")],
+    plugins: [
+        require('tw-elements/dist/plugin')
+    ]
 };
