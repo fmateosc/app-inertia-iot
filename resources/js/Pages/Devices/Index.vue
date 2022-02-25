@@ -7,10 +7,74 @@
         </template>
 
         <div class="py-12">
+            <!-- FORMULARIO -->
+            <div
+                class="w-full max-w-7xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200 mb-5"
+            >
+                <header class="px-5 py-4 border-b border-gray-100">
+                    <div class="flex items-center">Nuevo Dispositivo</div>
+                </header>
+
+                <div class="grid grid-cols-3 gap-5 px-5 mb-5 mt-3">
+                    <div>
+                        <Label 
+                            class="pb-1 font-bold"
+                            for="device-id" 
+                            value="Id"
+                        />
+                        <Input
+                            id="device-id"
+                            v-model="device.id"
+                            class="w-full p-4 bg-gray-100"
+                            type="text"
+                            placeholder="Id del dispositivo"
+                        />
+                    </div>
+
+                    <div>
+                        <Label 
+                            class="pb-1 font-bold"
+                            for="device-name" 
+                            value="Nombre"
+                        />
+                        <Input
+                            id="device-name"
+                            v-model="device.name"
+                            class="w-full p-4 bg-gray-100"
+                            type="text"
+                            placeholder="Nombre del dispositivo"
+                        />
+                    </div>
+                    
+                    <div>
+                        <Label 
+                            class="pb-1 font-bold"
+                            for="device-type" 
+                            value="Tipo"
+                        />
+                        <Input
+                            id="device-type"
+                            v-model="device.type"
+                            class="w-full p-4 bg-gray-100"
+                            type="text"
+                            placeholder="Tipo de dispositivo"
+                        />
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end m-4">
+                    <jet-button
+                        @click="saveDevice()"
+                    >
+                        Guardar
+                    </jet-button>
+                </div>
+            </div>
+
             <!-- Buscador -->
 
             <div
-                class="w-full max-w-7xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200"
+                class="w-full max-w-7xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200 mt-3"
             >
                 <header class="px-5 py-4 border-b border-gray-100">
                     <div class="flex items-center justify-end">
@@ -48,21 +112,31 @@
                                 <div class="form-check form-switch">
                                     <input
                                         v-if="device.selected"
-                                        @click="changeSaveRuler(device.id, device.selected)"
+                                        @click="
+                                            changeSaveRuler(
+                                                device.id,
+                                                device.selected
+                                            )
+                                        "
                                         class="form-check-input appearance-none w-9 -ml-6 rounded-full float-left h-5 align-top bg-white bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
                                         type="checkbox"
                                         role="switch"
-                                        id="flexSwitchCheckChecked"                                        
+                                        id="flexSwitchCheckChecked"
                                         checked
                                     />
 
                                     <input
                                         v-else
-                                        @click="changeSaveRuler(device.id, device.selected)"
+                                        @click="
+                                            changeSaveRuler(
+                                                device.id,
+                                                device.selected
+                                            )
+                                        "
                                         class="form-check-input appearance-none w-9 -ml-6 rounded-full float-left h-5 align-top bg-white bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
                                         type="checkbox"
                                         role="switch"
-                                        id="flexSwitchCheckChecked" 
+                                        id="flexSwitchCheckChecked"
                                     />
                                 </div>
                             </tr>
@@ -90,6 +164,10 @@ import AnchorLink from "@/Components/AnchorLink.vue";
 import Paginator from "@/Components/Paginator/Paginator";
 import pickBy from "lodash/pickBy";
 
+import Label from "@/Jetstream/Label";
+import Input from "@/Jetstream/Input";
+import InputError from "@/Jetstream/InputError";
+
 export default defineComponent({
     props: {
         devices: Object,
@@ -97,8 +175,11 @@ export default defineComponent({
     data() {
         return {
             search: "",
-            
-            
+            device: {
+                id: "",
+                type: "",
+                name: "",
+            },
         };
     },
     components: {
@@ -109,14 +190,20 @@ export default defineComponent({
         TableC,
         Table,
         AnchorLink,
+        Label,
+        Input,
+        InputError,
     },
     mounted() {},
     watch: {},
     computed: {},
     methods: {
-        changeSaveRuler(id, selected){
-            console.log(id + "   " + selected)
+        changeSaveRuler(id, selected) {
+            console.log(id + "   " + selected);
             //this.devices[id].saverRule = this.devices[id].saverRule;
+        },
+        saveDevice() {
+            console.log("guardando")
         }
     },
 });
