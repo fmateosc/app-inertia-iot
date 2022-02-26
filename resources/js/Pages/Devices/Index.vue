@@ -5,23 +5,22 @@
                 Dispositivos
             </h2>
         </template>
- 
+
         <div class="py-12">
             <!-- FORMULARIO -->
             <form @submit.prevent="submit">
                 <div
-                   
                     class="w-full max-w-7xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200 mb-5"
                 >
                     <header class="px-5 py-4 border-b border-gray-100">
-                        <div class="flex items-center">Nuevo Dispositivo</div>
+                        <div class="flex items-center">{{ formTitle }}</div>
                     </header>
 
                     <div class="grid grid-cols-3 gap-5 px-5 mb-5 mt-3">
                         <div>
-                            <Label 
+                            <Label
                                 class="pb-1 font-bold"
-                                for="device-id" 
+                                for="device-id"
                                 value="Id"
                             />
                             <Input
@@ -32,7 +31,7 @@
                                 placeholder="Id del dispositivo"
                                 autofocus
                             />
-                            <input-error 
+                            <input-error
                                 class="mt-2"
                                 :message="form.errors.device_id"
                             >
@@ -40,9 +39,9 @@
                         </div>
 
                         <div>
-                            <Label 
+                            <Label
                                 class="pb-1 font-bold"
-                                for="device-name" 
+                                for="device-name"
                                 value="Nombre"
                             />
                             <Input
@@ -52,17 +51,17 @@
                                 type="text"
                                 placeholder="Nombre del dispositivo"
                             />
-                            <input-error 
+                            <input-error
                                 class="mt-2"
                                 :message="form.errors.name"
                             >
                             </input-error>
                         </div>
-                        
+
                         <div>
-                            <Label 
+                            <Label
                                 class="pb-1 font-bold"
-                                for="device-type" 
+                                for="device-type"
                                 value="Tipo"
                             />
                             <Input
@@ -72,7 +71,7 @@
                                 type="text"
                                 placeholder="Tipo de dispositivo"
                             />
-                            <input-error 
+                            <input-error
                                 class="mt-2"
                                 :message="form.errors.type"
                             >
@@ -81,8 +80,25 @@
                     </div>
 
                     <div class="flex items-center justify-end m-4">
-                        <jet-button>
-                            Guardar
+                        <reset-button
+                            v-if="insertMode"
+                            @click="resetForm()"
+                        >
+                            Reset
+                        </reset-button>
+
+                        <reset-button
+                            v-else
+                            @click="cancelEdit()"
+                        >
+                            Cancelar
+                        </reset-button>
+
+                        <jet-button
+                            :class="{ 'opacity-25' : form.processing }"
+                            :disabled="form.processing"
+                        > 
+                            Guardar 
                         </jet-button>
                     </div>
                 </div>
@@ -94,9 +110,7 @@
                 class="w-full max-w-7xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200 mt-3"
             >
                 <header class="px-5 py-4 border-b border-gray-100">
-                    <div class="flex items-center justify-end">
-                        
-                    </div>
+                    <div class="flex items-center justify-end"></div>
                 </header>
                 <div class="p-3">
                     <div class="overflow-x-auto">
@@ -144,8 +158,8 @@
                                         v-else
                                         @click="
                                             changeSaveRuler(
-                                                device.id,
-                                                device.selected
+                                                device,
+                                                device.id
                                             )
                                         "
                                         class="form-check-input appearance-none w-9 -ml-6 rounded-full float-left h-5 align-top bg-white bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
@@ -154,6 +168,17 @@
                                         id="flexSwitchCheckChecked"
                                     />
                                 </div>
+
+                                <jet-button
+                                    class="ml-3 bg-blue-500"
+                                    type="btn"
+                                    @click="editDevice(device)"
+                                >
+                                    <i
+                                        class="fas fa-edit text-white-800"
+                                        aria-hidden="true"
+                                    ></i>
+                                </jet-button>
                             </tr>
                         </Table>
                     </div>
@@ -182,7 +207,8 @@ import pickBy from "lodash/pickBy";
 import Label from "@/Jetstream/Label";
 import Input from "@/Jetstream/Input";
 import InputError from "@/Jetstream/InputError";
-import { useForm } from '@inertiajs/inertia-vue3'
+import ResetButton from "@/Components/Buttons/ResetButton";
+import { useForm } from "@inertiajs/inertia-vue3";
 
 export default defineComponent({
     props: {
@@ -190,7 +216,9 @@ export default defineComponent({
     },
     data() {
         return {
-            search: ""
+            search: "",
+            formTitle: "",
+            insertMode: true,
         };
     },
     components: {
@@ -204,28 +232,69 @@ export default defineComponent({
         Label,
         Input,
         InputError,
+        ResetButton
     },
-    setup () {
-    const form = useForm({
-        device_id: "",
-        type: "",
-        name: "",
-        selected: 0
-    })
+    setup() {
+        const form = useForm({
+            id: "",
+            device_id: "",
+            type: "",
+            name: "",
+            selected: 0,
+        });
 
-    return { form }
-  },
-    mounted() {},
+        return { form };
+    },
+    mounted() {
+        this.formTitle = "Nuevo Dispositivo";
+        this.insertMode = true;
+    },
     watch: {},
     computed: {},
     methods: {
-        changeSaveRuler(id, selected) {
-            console.log(id + "   " + selected);
-            //this.devices[id].saverRule = this.devices[id].saverRule;
+        changeSaveRuler(device, id) {
+            Inertia.put(route("dispositivos.activar-desactivar", {'device':device}), id)
         },
         submit() {
-          this.form.post(route('dispositivos.store'));
-      }
+            if (this.insertMode) {
+                this.form.post(route("dispositivos.store"));
+
+                this.insertMode = true;
+                this.form.clearErrors();
+                this.form.reset();
+            } else {
+                this.form.put(route("dispositivos.update", this.form.id));
+
+                this.formTitle = "Nuevo Dispositivo";
+                this.insertMode = true;
+                this.form.clearErrors();
+                this.form.reset();
+
+                document.getElementById("device-id").focus();
+            }
+        },
+        editDevice(device) {
+            this.form.id = device.id;
+            this.form.device_id = device.device_id;
+            this.form.name = device.name;
+            this.form.type = device.type;
+
+            this.formTitle = "Editar Dispositivo";
+            this.insertMode = false;
+        },
+        resetForm() {
+            this.form.reset();
+
+            document.getElementById("device-id").focus();
+        },
+        cancelEdit() {
+            this.insertMode = true;
+            this.formTitle = "Nuevo Dispositivo";
+
+            this.form.reset();
+
+            document.getElementById("device-id").focus();
+        }
     },
 });
 </script>

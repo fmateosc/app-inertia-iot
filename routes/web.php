@@ -48,4 +48,11 @@ Route::middleware(['auth:sanctum', 'verified'])
     ->name('dispositivos.index');
 Route::middleware(['auth:sanctum', 'verified'])
     ->post('/dashboard/dispositivos/store', [DeviceController::class, 'store'])
-    ->name('dispositivos.store');     
+    ->name('dispositivos.store');
+Route::middleware(['auth:sanctum', 'verified'])
+    ->put('/dashboard/dispositivos/{id}/update', [DeviceController::class, 'update'])
+    ->name('dispositivos.update') ;
+Route::middleware(['auth:sanctum', 'verified'])
+->put('/dashboard/dispositivos/{device}/activarDesactivar', [DeviceController::class, 'activarDesactivar'])
+->name('dispositivos.activar-desactivar');    
+    
