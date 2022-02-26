@@ -5,71 +5,88 @@
                 Dispositivos
             </h2>
         </template>
-
+ 
         <div class="py-12">
             <!-- FORMULARIO -->
-            <div
-                class="w-full max-w-7xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200 mb-5"
-            >
-                <header class="px-5 py-4 border-b border-gray-100">
-                    <div class="flex items-center">Nuevo Dispositivo</div>
-                </header>
+            <form @submit.prevent="submit">
+                <div
+                   
+                    class="w-full max-w-7xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200 mb-5"
+                >
+                    <header class="px-5 py-4 border-b border-gray-100">
+                        <div class="flex items-center">Nuevo Dispositivo</div>
+                    </header>
 
-                <div class="grid grid-cols-3 gap-5 px-5 mb-5 mt-3">
-                    <div>
-                        <Label 
-                            class="pb-1 font-bold"
-                            for="device-id" 
-                            value="Id"
-                        />
-                        <Input
-                            id="device-id"
-                            v-model="device.id"
-                            class="w-full p-4 bg-gray-100"
-                            type="text"
-                            placeholder="Id del dispositivo"
-                        />
+                    <div class="grid grid-cols-3 gap-5 px-5 mb-5 mt-3">
+                        <div>
+                            <Label 
+                                class="pb-1 font-bold"
+                                for="device-id" 
+                                value="Id"
+                            />
+                            <Input
+                                id="device-id"
+                                v-model="form.device_id"
+                                class="w-full p-4 bg-gray-100"
+                                type="text"
+                                placeholder="Id del dispositivo"
+                                autofocus
+                            />
+                            <input-error 
+                                class="mt-2"
+                                :message="form.errors.device_id"
+                            >
+                            </input-error>
+                        </div>
+
+                        <div>
+                            <Label 
+                                class="pb-1 font-bold"
+                                for="device-name" 
+                                value="Nombre"
+                            />
+                            <Input
+                                id="device-name"
+                                v-model="form.name"
+                                class="w-full p-4 bg-gray-100"
+                                type="text"
+                                placeholder="Nombre del dispositivo"
+                            />
+                            <input-error 
+                                class="mt-2"
+                                :message="form.errors.name"
+                            >
+                            </input-error>
+                        </div>
+                        
+                        <div>
+                            <Label 
+                                class="pb-1 font-bold"
+                                for="device-type" 
+                                value="Tipo"
+                            />
+                            <Input
+                                id="device-type"
+                                v-model="form.type"
+                                class="w-full p-4 bg-gray-100"
+                                type="text"
+                                placeholder="Tipo de dispositivo"
+                            />
+                            <input-error 
+                                class="mt-2"
+                                :message="form.errors.type"
+                            >
+                            </input-error>
+                        </div>
                     </div>
 
-                    <div>
-                        <Label 
-                            class="pb-1 font-bold"
-                            for="device-name" 
-                            value="Nombre"
-                        />
-                        <Input
-                            id="device-name"
-                            v-model="device.name"
-                            class="w-full p-4 bg-gray-100"
-                            type="text"
-                            placeholder="Nombre del dispositivo"
-                        />
-                    </div>
-                    
-                    <div>
-                        <Label 
-                            class="pb-1 font-bold"
-                            for="device-type" 
-                            value="Tipo"
-                        />
-                        <Input
-                            id="device-type"
-                            v-model="device.type"
-                            class="w-full p-4 bg-gray-100"
-                            type="text"
-                            placeholder="Tipo de dispositivo"
-                        />
+                    <div class="flex items-center justify-end m-4">
+                        <jet-button>
+                            Guardar
+                        </jet-button>
                     </div>
                 </div>
-
-                <div class="flex items-center justify-end m-4">
-                    <jet-button
-                        @click="saveDevice()"
-                    >
-                        Guardar
-                    </jet-button>
-                </div>
-            </div>
+            </form>
 
             <!-- Buscador -->
 
@@ -78,9 +95,7 @@
             >
                 <header class="px-5 py-4 border-b border-gray-100">
                     <div class="flex items-center justify-end">
-                        <AnchorLink :href="route('dispositivos.create')"
-                            >Nuevo Dispositivo</AnchorLink
-                        >
+                        
                     </div>
                 </header>
                 <div class="p-3">
@@ -167,6 +182,7 @@ import pickBy from "lodash/pickBy";
 import Label from "@/Jetstream/Label";
 import Input from "@/Jetstream/Input";
 import InputError from "@/Jetstream/InputError";
+import { useForm } from '@inertiajs/inertia-vue3'
 
 export default defineComponent({
     props: {
@@ -174,12 +190,7 @@ export default defineComponent({
     },
     data() {
         return {
-            search: "",
-            device: {
-                id: "",
-                type: "",
-                name: "",
-            },
+            search: ""
         };
     },
     components: {
@@ -194,6 +205,16 @@ export default defineComponent({
         Input,
         InputError,
     },
+    setup () {
+    const form = useForm({
+        device_id: "",
+        type: "",
+        name: "",
+        selected: 0
+    })
+
+    return { form }
+  },
     mounted() {},
     watch: {},
     computed: {},
@@ -202,9 +223,9 @@ export default defineComponent({
             console.log(id + "   " + selected);
             //this.devices[id].saverRule = this.devices[id].saverRule;
         },
-        saveDevice() {
-            console.log("guardando")
-        }
+        submit() {
+          this.form.post(route('dispositivos.store'));
+      }
     },
 });
 </script>

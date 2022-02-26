@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
-            $table->string('device_id', 50)->unique();
+            $table->string('device_id', 10)->unique();
             $table->string('name', 20);
             $table->string('type', 100);
             $table->string('password', 20)->nullable();

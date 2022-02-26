@@ -47,5 +47,5 @@ Route::middleware(['auth:sanctum', 'verified'])
     ->get('/dashboard/dispositivos', [DeviceController::class, 'index'])
     ->name('dispositivos.index');
 Route::middleware(['auth:sanctum', 'verified'])
-    ->get('/dashboard/dispositivos/create', [DeviceController::class, 'create'])
-    ->name('dispositivos.create');     
+    ->post('/dashboard/dispositivos/store', [DeviceController::class, 'store'])
+    ->name('dispositivos.store');     

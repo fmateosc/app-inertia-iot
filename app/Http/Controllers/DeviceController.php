@@ -20,5 +20,15 @@ class DeviceController extends Controller
         return Inertia::render('Devices/Index', compact('devices'));
     }
 
-    
+    public function store(Request $request) {
+        Device::create(
+            $request->validate([
+                'device_id' => "required|min:4|max:10|unique:devices",
+                'name' => "required|min:4|max:20",
+                'type' => "required|min:5|max:100"
+            ])
+        );
+
+        return Redirect::route('dispositivos.index');
+    }   
 }
