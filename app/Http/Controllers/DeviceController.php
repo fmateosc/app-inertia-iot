@@ -14,10 +14,23 @@ class DeviceController extends Controller
     {
         $filters = $request->all('search');
 
-        $devices = Device::filter($filters)
+        $sortBy = $request->sortBy;
+
+        if(!in_array($sortBy, ['id', 'device_id', 'name', 'type'])) {
+            $sortBy = 'id';
+        }
+
+        $sort = $request->sort;
+
+        if (!in_array($sort, ['ASC', 'DESC'])) {
+            $sort = 'ASC';
+        }
+
+        $devices = Device::orderBy($sortBy, ($sort == 'ASC') ? 'ASC' : 'DESC')
+            ->filter($filters)
             ->paginate(5);
 
-        return Inertia::render('Devices/Index', compact('devices'));
+        return Inertia::render('Devices/Index', compact('devices', 'sortBy', 'sort'));
     }
 
     public function store(Request $request) {

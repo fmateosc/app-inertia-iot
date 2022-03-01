@@ -125,10 +125,42 @@
                         <!---------TABLA---------------------------->
                         <Table>
                             <template #header>
-                                <TableC>ID</TableC>
-                                <TableC>ID DISPOSITIVO</TableC>
-                                <TableC>NOMBRE</TableC>
-                                <TableC>TIPO</TableC>
+                                <TableC 
+                                    @click="sortColumn('id')"
+                                    :sortHeader="true"
+                                    field="id"
+                                    :sortBy="sortBy"
+                                    :sort="sort"
+                                >
+                                    ID
+                                </TableC>
+                                <TableC 
+                                    @click="sortColumn('device_id')"
+                                    :sortHeader="true"
+                                    field="device_id"
+                                    :sortBy="sortBy"
+                                    :sort="sort"
+                                >
+                                    ID DISPOSITIVO
+                                </TableC>
+                                <TableC 
+                                    @click="sortColumn('name')"
+                                    :sortHeader="true"
+                                    field="name"
+                                    :sortBy="sortBy"
+                                    :sort="sort"
+                                >
+                                    NOMBRE
+                                </TableC>
+                                <TableC 
+                                    @click="sortColumn('type')"
+                                    :sortHeader="true"
+                                    field="type"
+                                    :sortBy="sortBy"
+                                    :sort="sort"
+                                >
+                                    TIPO
+                                </TableC>
                                 <TableC>ACCIONES</TableC>
                             </template>
 
@@ -223,6 +255,8 @@ import { useForm } from "@inertiajs/inertia-vue3";
 export default defineComponent({
     props: {
         devices: Object,
+        sortBy: String,
+        sort: String
     },
     data() {
         return {
@@ -269,7 +303,12 @@ export default defineComponent({
     computed: {},
     methods: {
         changeSaveRuler(device, id) {
-            Inertia.put(route("dispositivos.activar-desactivar", {'device':device}), id)
+            
+        
+            this.$inertia.get(route('dispositivos.index', {'device':device}), {
+                id,
+                page: this.devices.current_page,        
+            }, {preserveScroll: true});
         },
         submit() {
             if (this.insertMode) {
@@ -310,6 +349,21 @@ export default defineComponent({
             this.form.reset();
 
             document.getElementById("device-id").focus();
+        },
+        sortColumn(col){
+            let sort = this.sort;
+
+            if (this.sort == "ASC") {
+                sort = "DESC";
+            } else {
+               sort = "ASC"; 
+            }
+            
+            this.$inertia.get(route('dispositivos.index'), {
+                'sortBy': col,
+                sort: sort,
+                page: this.devices.current_page,        
+            }, {preserveScroll: true});
         }
     },
 });
