@@ -12,10 +12,10 @@ class DeviceController extends Controller
 {
     public function index(Request $request)
     {
-        //$filters = $request->all('search');
+        $filters = $request->all('search');
 
-
-        $devices = Device::paginate(10);
+        $devices = Device::filter($filters)
+            ->paginate(5);
 
         return Inertia::render('Devices/Index', compact('devices'));
     }

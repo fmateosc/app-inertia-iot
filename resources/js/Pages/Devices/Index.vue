@@ -105,6 +105,14 @@
             </form>
 
             <!-- Buscador -->
+            <div class="w-full max-w-7xl mx-auto p-3 whitespace-nowrap0">
+                <Input
+                    v-model="search"
+                    class="w-full p-4"
+                    type="text"
+                    placeholder="¿Qué quiere buscar?"
+                />
+            </div>
 
             <div
                 class="w-full max-w-7xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200 mt-3"
@@ -181,6 +189,8 @@
                                 </jet-button>
                             </tr>
                         </Table>
+
+                        <Paginator :pagination="devices"></Paginator>
                     </div>
                 </div>
             </div>
@@ -249,7 +259,13 @@ export default defineComponent({
         this.formTitle = "Nuevo Dispositivo";
         this.insertMode = true;
     },
-    watch: {},
+    watch: {
+        search($value) {
+            this.$inertia.get("dispositivos", pickBy({ search: $value }), {
+                preserveState: true,
+            });
+        },
+    },
     computed: {},
     methods: {
         changeSaveRuler(device, id) {
